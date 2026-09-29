@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The verification script starts PostgreSQL + Redis via docker compose
+      # and proves the whole data layer — schema, atomic booking, the
+      # double-booking guarantee (sequential AND concurrent), the reads, and
+      # the Redis holds / cache / rate-limiter.
+      - name: Verify against real PostgreSQL + Redis
+        run: ./scripts/verify.sh
